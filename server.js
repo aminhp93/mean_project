@@ -11,5 +11,5 @@ require('./server/config/mongoose.js');
 require('./server/config/routes.js')(app);
 
 app.listen(3000, function() {
-    console.log('Framework on port 3000');
+    console.log('Project on port 3000');
 })
