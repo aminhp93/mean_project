@@ -1,7 +1,9 @@
 <div><a href="#/">Logout</a></div>
 <h1>All users</h1>
 <div ng-repeat="i in users">
-    <div>{{i.name}}</div>
-    <div>{{i.createdAt | date: YYYY-mm-dd}}</div>
-    <img style="width: 100px; height:100px; " ng-src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQjzeMLlmGX21FTbIVH-kgAJQT0TLp80Cvjf2PIYWSSX8Er7pfC" alt="">
+    <div>Nick name: {{i.name}}</div>
+    <div>Created At{{i.createdAt | date: YYYY-mm-dd}}</div>
+    <div>Email: {{i.email}}</div>
+    <div>Age: {{i.age_range}}</div>
+    <img style="width: 100px; height:100px" ng-src="{{i.image_url}}" alt="">
 </div>

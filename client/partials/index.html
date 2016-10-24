@@ -1,5 +1,5 @@
 <form name="myForm">
-    Enter your name:
+    Your name:
     <input type="text" ng-model="user.name" placeholder="Enter your name here" required>
     <input type="submit" ng-click="createUser()" ng-disabled="myForm.$invalid">
     <span ng-show="myForm.$dirty && myForm.$error.required">Name is required</span>
@@ -16,21 +16,27 @@
 </div>
  -->
 <h1>All users</h1>
-<div ng-repeat="i in users">
-    <div>{{i.name}}</div>
-    <div>{{i.createdAt | date: YYYY-mm-dd}}</div>
-    <img style="width: 100px; height:100px; " ng-src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQjzeMLlmGX21FTbIVH-kgAJQT0TLp80Cvjf2PIYWSSX8Er7pfC" alt="">
+<div>
+    <button class="btn btn-primary" ng-click="login()" ng-disabled="loginStatus.status == 'connected'">Connect with Facebook</button>
+    &nbsp;
+    <button class="btn btn-danger" ng-click="logout()" ng-disabled="!loginStatus || loginStatus.status != 'connected'">Logout</button>
+    &nbsp;
+    <button class="btn btn-success" ng-click="share()">FB.ui</button>
 </div>
-<!-- <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-</fb:login-button>
-<div class="fb-like" data-share="true" data-width="450" data-show-faces="true">
-</div> -->
-<!-- <button ng-click="getLoginStatus()">Hello</button>
-<button ng-click="login()">Login</button>
-<button ng-click="me()">Me</button> -->
-<button type="button" id="login" ng-click="login()">login</button>
-<button type="button" id="api" ng-click="api()">api user data call</button>
-<button type="button" id="remove_auth" ng-click="removeAuth()">remove auth</button>
-<pre>isReady: <span id="is_ready" ng-bind="facebookIsReady"></span></pre>
-<pre>status: <span id="login_status" ng-bind="loginStatus"></span></pre>
-<pre>username: <span id="api_first_name" ng-bind="user.first_name"></span></pre>
+<br>
+<div class="row">
+    <div class="col-md-6">
+        <h4 class="text-info">$FB.loginStatus()</h4>
+        <div class="code-block" hljs source="loginStatusJSON"></div>
+    </div>
+    <div class="col-md-6">
+        <h4 class="text-info">$FB.api('/me')</h4>
+        <div class="code-block" hljs source="apiMeJSON"></div>
+    </div>
+</div>
+</div>
+<div ng-repeat="i in users">
+    <a href="/#/dashboard">{{ i.name }}</a>
+    <img style="width: 100px; height:100px" ng-src="{{i.image_url}}" alt="">
+    <div>{{i.createdAt | date: YYYY-mm-dd}}</div>
+</div>

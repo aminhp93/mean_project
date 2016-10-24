@@ -1,7 +1,10 @@
 var mongoose = require('mongoose');
 
 var UserSchema = new mongoose.Schema({
-    name: { type: String }
+    name: { type: String },
+    image_url: { type: String },
+    age_range: { type: String },
+    email: { type: String },
 }, { timestamps: true });
 
 mongoose.model('User', UserSchema);

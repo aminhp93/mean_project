@@ -1,4 +1,4 @@
-app.controller('userController', function($scope, $http, userFactory, $location, $cookies, Facebook) {
+app.controller('userController', function($scope, $http, userFactory, $location, $cookies, ezfb) {
     function getUser(data) {
         $scope.users = data;
 
@@ -14,8 +14,6 @@ app.controller('userController', function($scope, $http, userFactory, $location,
         $scope.user = {};
         $location.url('/dashboard');
     }
-
-
 
 
     // $scope.accounts = [];
@@ -40,82 +38,97 @@ app.controller('userController', function($scope, $http, userFactory, $location,
     // getUserFromGit(0);
 
 
-    // $scope.checkLoginState = function() {
-    //     console.log('1');
-    //     FB.getLoginStatus(function(response) {
-    //         console.log('2');
-    //         if (response.status === 'connected') {
-    //             console.log('3');
-    //             userFactory.testAPI();
-    //         }
-    //     });
-    // }
+    updateLoginStatus(updateApiMe);
+    console.log(ezfb);
 
-
-    // $scope.login = function() {
-    //     // From now on you can use the Facebook service just as Facebook api says
-    //     Facebook.login(function(response) {
-    //         // Do something with response.
-    //     });
-    // };
-
-    // $scope.getLoginStatus = function() {
-    //     console.log(Facebook);
-    //     Facebook.getLoginStatus(function(response) {
-    //         console.log(response);
-    //         if (response.status === 'connected') {
-    //             $scope.loggedIn = true;
-    //         } else {
-    //             $scope.loggedIn = false;
-    //         }
-    //     });
-    // };
-
-    // $scope.me = function() {
-    //     Facebook.api('/me', function(response) {
-    //         $scope.user = response;
-    //     });
-    // };
-
-    // $scope.$watch(function() {
-    //     // This is for convenience, to notify if Facebook is loaded and ready to go.
-    //     return Facebook.isReady();
-    // }, function(newVal) {
-    //     // You might want to use this to disable/show/hide buttons and else
-    //     $scope.facebookReady = true;
-    // });
-
-
-    $scope.loginStatus = 'disconnected';
-    $scope.facebookIsReady = false;
-    $scope.user = null;
     $scope.login = function() {
-        Facebook.login(function(response) {
-            console.log(response);
-            $scope.loginStatus = response.status;
+        /**
+         * Calling FB.login with required permissions specified
+         * https://developers.facebook.com/docs/reference/javascript/FB.login/v2.0
+         */
+        ezfb.login(function(res) {
+            /**
+             * no manual $scope.$apply, I got that handled
+             */
+            if (res.authResponse) {
+                updateLoginStatus(updateApiMe);
+            }
+            ezfb.api('/me', function(response1) {
+                $scope.user = response1;
+                ezfb.api('/' + response1.id + '?fields=picture,age_range,email,gender,current_city', function(response2) {
+                    console.log(response2);
+                    info = { 'name': response1.name, 'image_url': response2.picture.data.url, 'email': response2.email, 'age_range': response2.age_range.min }
+                    userFactory.create(info);
+                })
+
+                ezfb.api('/' + response1.id + "?fields=friends", function(response) {
+                    console.log(response);
+                })
+
+                ezfb.api('/me/likes', function(res) {
+                    console.log('Minh');
+                    console.log(res);
+                })
+            });
+        }, { scope: 'email,user_likes' });
+    };
+
+    $scope.logout = function() {
+        /**
+         * Calling FB.logout
+         * https://developers.facebook.com/docs/reference/javascript/FB.logout
+         */
+        ezfb.logout(function() {
+            updateLoginStatus(updateApiMe);
         });
     };
-    // $scope.removeAuth = function() {
-    //     Facebook.api({
-    //         method: 'Auth.revokeAuthorization'
-    //     }, function(response) {
-    //         Facebook.getLoginStatus(function(response) {
-    //             $scope.loginStatus = response.status;
-    //         });
-    //     });
-    // };
-    $scope.api = function() {
-        Facebook.api('/me', function(response) {
-            $scope.user = response;
-            console.log(response);
-        });
+
+    $scope.share = function() {
+        ezfb.ui({
+                method: 'feed',
+                name: 'angular-easyfb API demo',
+                picture: 'http://plnkr.co/img/plunker.png',
+                link: 'http://plnkr.co/edit/qclqht?p=preview',
+                description: 'angular-easyfb is an AngularJS module wrapping Facebook SDK.' +
+                    ' Facebook integration in AngularJS made easy!' +
+                    ' Please try it and feel free to give feedbacks.'
+            },
+            function(res) {
+                // res: FB.ui response
+            }
+        );
     };
-    // $scope.$watch(function() {
-    //     return Facebook.isReady();
-    // }, function(newVal) {
-    //     if (newVal) {
-    //         $scope.facebookIsReady = true;
-    //     }
-    // });
+
+    /**
+     * For generating better looking JSON results
+     */
+    var autoToJSON = ['loginStatus', 'apiMe'];
+    angular.forEach(autoToJSON, function(varName) {
+        $scope.$watch(varName, function(val) {
+            $scope[varName + 'JSON'] = JSON.stringify(val, null, 2);
+        }, true);
+    });
+
+    /**
+     * Update loginStatus result
+     */
+    function updateLoginStatus(more) {
+        ezfb.getLoginStatus(function(res) {
+            $scope.loginStatus = res;
+
+            (more || angular.noop)();
+        });
+    }
+
+    /**
+     * Update api('/me') result
+     */
+    function updateApiMe() {
+        ezfb.api('/me', function(res) {
+            $scope.apiMe = res;
+        });
+    }
+
+
 
 })
