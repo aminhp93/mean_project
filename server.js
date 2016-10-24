@@ -10,6 +10,6 @@ app.use(express.static(path.join(__dirname, './bower_components')));
 require('./server/config/mongoose.js');
 require('./server/config/routes.js')(app);
 
-app.listen(3000, function() {
-    console.log('Project on port 3000');
+app.listen(8000, function() {
+    console.log('Project on port 8000');
 })
