@@ -17,7 +17,12 @@ app.factory('dashboardFactory', function($http) {
         $http.get('/users/' + id).then(function(result) {
             users = result.data;
             callback(users);
-            console.log(result);
+        })
+    }
+
+    factory.updatePosition = function(user) {
+        $http.post('/users/position', user).then(function(result) {
+
         })
     }
 

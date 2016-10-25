@@ -16,18 +16,35 @@ module.exports = {
             if (err) {
                 console.log(err);
             } else {
-                response.redirect('/users');
+                response.json(result);
             }
         })
     },
     getOne: function(request, response) {
-        console.log(request.params);
         User.find({ _id: request.params.id }, function(err, result) {
             if (err) {
                 console.log(err);
             } else {
                 console.log(result);
                 response.json(result);
+            }
+        })
+    },
+    updatePosition: function(request, response) {
+        console.log(request.body);
+        User.findOne({ facebook_id: request.body.facebook_id }, function(err, result) {
+            if (err) {
+                console.log(err);
+            } else {
+                result['latitude'] = request.body.latitude;
+                result['longtitude'] = request.body.longtitude;
+                console.log(result);
+                result.save(function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                })
+
             }
         })
     }
