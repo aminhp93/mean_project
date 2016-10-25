@@ -4,10 +4,10 @@ app.config(function($routeProvider, ezfbProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'partials/index.html',
-            controller: 'userController'
+            controller: 'dashboardController'
         })
-        .when('/dashboard', {
-            templateUrl: 'partials/dashboard.html',
+        .when('/users/:id', {
+            templateUrl: 'partials/user.html',
             controller: 'userController'
         })
         .otherwise({

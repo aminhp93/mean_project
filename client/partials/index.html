@@ -2,7 +2,6 @@
     Your name:
     <input type="text" ng-model="user.name" placeholder="Enter your name here" required>
     <input type="submit" ng-click="createUser()" ng-disabled="myForm.$invalid">
-    <span ng-show="myForm.$dirty && myForm.$error.required">Name is required</span>
 </form>
 <!-- <div>
     <table>
@@ -24,19 +23,8 @@
     <button class="btn btn-success" ng-click="share()">FB.ui</button>
 </div>
 <br>
-<div class="row">
-    <div class="col-md-6">
-        <h4 class="text-info">$FB.loginStatus()</h4>
-        <div class="code-block" hljs source="loginStatusJSON"></div>
-    </div>
-    <div class="col-md-6">
-        <h4 class="text-info">$FB.api('/me')</h4>
-        <div class="code-block" hljs source="apiMeJSON"></div>
-    </div>
-</div>
-</div>
 <div ng-repeat="i in users">
-    <a href="/#/dashboard">{{ i.name }}</a>
+    <a href="#/users/{{i._id}}">{{i.name}}</a>
     <img style="width: 100px; height:100px" ng-src="{{i.image_url}}" alt="">
     <div>{{i.createdAt | date: YYYY-mm-dd}}</div>
 </div>

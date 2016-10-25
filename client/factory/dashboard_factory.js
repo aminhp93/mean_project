@@ -1,9 +1,25 @@
 app.factory('dashboardFactory', function($http) {
     var factory = {};
-    var user = [];
+    var users = [];
 
+    factory.getUser = function(callback) {
+        $http.get('/users').then(function(result) {
+            users = result.data;
+            callback(users);
+        })
+    }
 
+    factory.createUser = function(user) {
+        $http.post('/users', user)
+    }
 
+    factory.getOneUser = function(id, callback) {
+        $http.get('/users/' + id).then(function(result) {
+            users = result.data;
+            callback(users);
+            console.log(result);
+        })
+    }
 
     return factory;
 })
