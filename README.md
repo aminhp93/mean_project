@@ -106,6 +106,13 @@ Send message when radius between 2 PEOPLE < 1 mile
 location: --> wait
 
 1. Access token with authoriazation FB SDK -> check OAuth
-
 2. Geolocation to find trigger the alert when user gets closer to their CHANCE
 3. Things to add for compatibility (hobbies, age, location)
+4. Additional features: sound, graph for UI
+
+----------------------------------------
++ put location on database, store and remove every 1 minute
+
++ eliminate the checking number by same hobbies before checking location
+
+

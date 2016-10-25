@@ -19,5 +19,16 @@ module.exports = {
                 response.redirect('/users');
             }
         })
+    },
+    getOne: function(request, response) {
+        console.log(request.params);
+        User.find({ _id: request.params.id }, function(err, result) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(result);
+                response.json(result);
+            }
+        })
     }
 }
