@@ -1,4 +1,4 @@
-app.factory('dashboardFactory', function($http) {
+app.factory('dashboardFactory', function($http, $rootScope) {
     var factory = {};
     var users = [];
 
@@ -19,12 +19,5 @@ app.factory('dashboardFactory', function($http) {
             callback(users);
         })
     }
-
-    factory.updatePosition = function(user) {
-        $http.post('/users/position', user).then(function(result) {
-
-        })
-    }
-
     return factory;
 })

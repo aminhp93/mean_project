@@ -12,13 +12,22 @@ module.exports = {
         })
     },
     create: function(request, response) {
-        User.create(request.body, function(err, result) {
+        User.find({ facebook_id: request.body.facebook_id }, function(err, result) {
             if (err) {
                 console.log(err);
             } else {
-                response.json(result);
+                if (result.length == 0) {
+                    User.create(request.body, function(err, result) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            response.json(result);
+                        }
+                    })
+                }
             }
         })
+
     },
     getOne: function(request, response) {
         User.find({ _id: request.params.id }, function(err, result) {

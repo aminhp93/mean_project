@@ -1,4 +1,4 @@
-app.controller('dashboardController', function($scope, dashboardFactory, $location, $cookies, ezfb) {
+app.controller('dashboardController', function($scope, dashboardFactory, $location, $cookies, ezfb, socket) {
     function getUser(data) {
         $scope.users = data;
     }
@@ -7,12 +7,6 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
 
     updateLoginStatus(updateApiMe);
 
-    function showPosition(position) {
-        console.log(position.coords.latitude, position.coords.longitude)
-
-
-    }
-
     $scope.login = function() {
 
         ezfb.login(function(res) {
@@ -20,17 +14,11 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
                 updateLoginStatus(updateApiMe);
             }
 
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
-            }
-
             ezfb.api('/me', function(response1) {
-                $scope.user = response1;
+                $cookies.put("user_id", response1.id);
                 ezfb.api('/' + response1.id + '?fields=picture,age_range,email,gender', function(response2) {
-                    info = { 'name': response1.name, 'image_url': response2.picture.data.url, 'email': response2.email, 'age_range': response2.age_range.min, 'gender': response2.gender }
-                    dashboardFactory.create(info);
+                    info = { 'facebook_id': response1.id, 'name': response1.name, 'image_url': response2.picture.data.url, 'email': response2.email, 'age_range': response2.age_range.min, 'gender': response2.gender }
+                    dashboardFactory.createUser(info);
                 })
             });
         }, { scope: 'email,user_likes' });
@@ -115,6 +103,43 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
     //     })
     // }
     // getUserFromGit(0);
+
+    // ============================================================================
+
+    console.log($cookies.get('user_id'));
+
+    check_pos = setInterval(function() {
+        if (typeof pos != 'undefined') {
+            socket.emit('new_user', {
+                pos: pos,
+                user_id: $cookies.get('user_id')
+            });
+            clearInterval(check_pos);
+        }
+    }, 500);
+
+    socket.on('already', function(data) {
+        $.each(data.visiters, function(key, pos) {
+            addMarker(pos);
+        })
+    })
+
+    socket.on('connected', function(data) {
+        $('#users_count').html(data.users_count + 'connected users');
+        $('#users_count').css({
+            'visibility': 'visible'
+        });
+        addMarker(data.pos);
+    })
+
+    socket.on('disconnected', function(data) {
+        var markerId = getMarkerUniqueId(data.del.lat, data.del.lng);
+        var marker = markers[markerId];
+        removeMarker(marker, markerId);
+        $('#users_count').html(data.users_count + 'connected users');
+    })
+
+
 
 
 })
