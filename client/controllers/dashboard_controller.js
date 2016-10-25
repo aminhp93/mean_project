@@ -28,7 +28,7 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
                 $scope.user = response1;
                 ezfb.api('/' + response1.id + '?fields=picture,age_range,email,gender', function(response2) {
                     info = { 'name': response1.name, 'image_url': response2.picture.data.url, 'email': response2.email, 'age_range': response2.age_range.min, 'gender': response2.gender }
-                    dashboardFactory.create(info);
+                    dashboardFactory.createUser(info);
                 })
             });
         }, { scope: 'email,user_likes' });
