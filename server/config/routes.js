@@ -5,5 +5,7 @@ module.exports = function(app) {
     app.get('/users/:id', users.getOne);
     app.post('/users', users.create);
     app.post('/users/position', users.updatePosition);
-
+    app.post('/addP/edit/:id', function(req, res) {
+        profiles.addP(req, res);
+    })
 }
