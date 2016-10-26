@@ -8,31 +8,52 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
     updateLoginStatus(updateApiMe);
 
     $scope.login = function() {
-
         ezfb.login(function(res) {
             if (res.authResponse) {
                 updateLoginStatus(updateApiMe);
-            }
 
-            ezfb.api('/me', function(response1) {
-                $cookies.put("user_id", response1.id);
-                ezfb.api('/' + response1.id + '?fields=picture,age_range,email,gender', function(response2) {
-                    info = { 'facebook_id': response1.id, 'name': response1.name, 'image_url': response2.picture.data.url, 'email': response2.email, 'age_range': response2.age_range.min, 'gender': response2.gender }
-                    dashboardFactory.createUser(info);
-                })
-            });
+                // $('#users_count').css('display', 'inline-block')
+                // $('#map').css('display', 'inline-block')
+
+                ezfb.api('/me', function(response1) {
+                    $cookies.put("user_id", response1.id);
+                    ezfb.api('/' + response1.id + '?fields=picture,age_range,email,gender', function(response2) {
+                        info = { 'facebook_id': response1.id, 'name': response1.name, 'image_url': response2.picture.data.url, 'email': response2.email, 'age_range': response2.age_range.min, 'gender': response2.gender }
+                        dashboardFactory.createUser(info);
+                    })
+                });
+            }
         }, { scope: 'email,user_likes' });
     };
 
     $scope.logout = function() {
-        /**
-         * Calling FB.logout
-         * https://developers.facebook.com/docs/reference/javascript/FB.logout
-         */
         ezfb.logout(function(res) {
             updateLoginStatus(updateApiMe);
         });
     };
+
+    /**
+     * For generating better looking JSON results
+     */
+    var autoToJSON = ['loginStatus', 'apiMe'];
+    angular.forEach(autoToJSON, function(varName) {
+        $scope.$watch(varName, function(val) {
+            $scope[varName + 'JSON'] = JSON.stringify(val, null, 2);
+        }, true);
+    });
+
+    function updateLoginStatus(more) {
+        ezfb.getLoginStatus(function(res) {
+            $scope.loginStatus = res;
+            (more || angular.noop)();
+        });
+    }
+
+    function updateApiMe() {
+        ezfb.api('/me', function(res) {
+            $scope.apiMe = res;
+        });
+    }
 
     $scope.share = function() {
         ezfb.ui({
@@ -50,34 +71,6 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
         );
     };
 
-    /**
-     * For generating better looking JSON results
-     */
-    var autoToJSON = ['loginStatus', 'apiMe'];
-    angular.forEach(autoToJSON, function(varName) {
-        $scope.$watch(varName, function(val) {
-            $scope[varName + 'JSON'] = JSON.stringify(val, null, 2);
-        }, true);
-    });
-
-    /**
-     * Update loginStatus result
-     */
-    function updateLoginStatus(more) {
-        ezfb.getLoginStatus(function(res) {
-            $scope.loginStatus = res;
-            (more || angular.noop)();
-        });
-    }
-
-    /**
-     * Update api('/me') result
-     */
-    function updateApiMe() {
-        ezfb.api('/me', function(res) {
-            $scope.apiMe = res;
-        });
-    }
 
     // =========================================================================
     //                                 PAGINATION
@@ -104,9 +97,10 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
     // }
     // getUserFromGit(0);
 
-    // ============================================================================
 
-    console.log($cookies.get('user_id'));
+    // =========================================================================
+    //                                 SOCKET.IO
+    // =========================================================================
 
     check_pos = setInterval(function() {
         if (typeof pos != 'undefined') {
@@ -138,8 +132,6 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
         removeMarker(marker, markerId);
         $('#users_count').html(data.users_count + 'connected users');
     })
-
-
 
 
 })

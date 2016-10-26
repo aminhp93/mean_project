@@ -2,10 +2,11 @@
 <html ng-app="app">
 
 <head>
-    <title>Framework</title>
+    <title>Project</title>
     <script src="angular/angular.js"></script>
     <script src="angular-route/angular-route.js"></script>
     <script src="angular-cookies/angular-cookies.js"></script>
+    <script src="jquery/dist/jquery.js"></script>
     <script src="angular-easyfb/src/angular-easyfb.js"></script>
     <script src="angularUtils-pagination/dirPagination.js"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -15,7 +16,6 @@
     <script src="controllers/user_controller.js"></script>
     <script src="controllers/dashboard_controller.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjRPy2x2UStWmZ9dsB7PrUoDhYSYssWYA&callback=initMap" async defer></script>
     <style>
     html,
     body {
@@ -27,8 +27,14 @@
     #map {
         height: 400px;
         width: 400px;
+        /*display: none;*/
+    }
+    
+    #users_count {
+        /*display: none;*/
     }
     </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjRPy2x2UStWmZ9dsB7PrUoDhYSYssWYA&callback=initMap" async defer></script>
     <script>
     var map;
 
@@ -73,8 +79,7 @@
         }, "jsonp");
     }
     getLocation();
-    </script>
-    <script>
+
     var markers = [];
     var getMarkerUniqueId = function(lat, lng) {
         return lat + "_" + lng;

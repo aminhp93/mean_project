@@ -19,5 +19,4 @@ app.config(function($routeProvider, ezfbProvider) {
 
         version: 'v2.3'
     });
-
 })
