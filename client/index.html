@@ -14,85 +14,8 @@
     <script src="factory/socket_factory.js"></script>
     <script src="controllers/user_controller.js"></script>
     <script src="controllers/dashboard_controller.js"></script>
-    <style>
-    html,
-    body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
-    
-    #map {
-        height: 400px;
-        width: 400px;
-    }
-    </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjRPy2x2UStWmZ9dsB7PrUoDhYSYssWYA&callback=initMap" async defer></script>
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false&language=en"></script>
     <script>
-    var map;
-
-    function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {
-                lat: 0.37546086192873,
-                lng: 0.91048881359956
-            },
-            zoom: 10
-        });
-    }
-
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition, hidePosition);
-        } else {
-            ipPosition();
-        }
-    }
-
-    function showPosition(position) {
-        pos = {
-            lat: parseFloat(position.coords.latitude),
-            lng: parseFloat(position.coords.longitude)
-        };
-    }
-
-    function hidePosition(position) {
-        ipPosition();
-    }
-
-    function ipPosition() {
-        $.get("http://ipinfo.io", function(response) {
-            var loc = response.loc.split(',');
-            pos = {
-                lat: parseFloat(loc[0]),
-                lng: parseFloat(loc[1])
-            };
-        }, "jsonp");
-    }
-    getLocation();
-
-    var markers = [];
-    var getMarkerUniqueId = function(lat, lng) {
-        return lat + '_' + lng;
-    }
-
-    function addMarker(location) { // Adds a marker to the map and push to the array.
-        var markerId = getMarkerUniqueId(location.lat, location.lng); // that will be used to cache this marker in markers object.
-        var marker = new google.maps.Marker({
-            position: location,
-            map: map,
-            animation: google.maps.Animation.DROP,
-            id: markerId
-        });
-        markers[markerId] = marker;
-        map.setCenter(pos);
-
-    }
-    var removeMarker = function(marker, markerId) {
-        marker.setMap(null); // set markers setMap to null to remove it from map
-        delete markers[markerId]; // delete marker instance from markers object
-    };
-
     var socket = io();
     $(document).ready(function() {
         check_pos = setInterval(function() { //create a loop and wait for the response

@@ -25,18 +25,9 @@ io.on('connection', function(socket) {
         visitors[socket.id] = data;
         io.emit('connected', { pos: data.pos, user_id: data.user_id, users_count: Object.keys(visitors).length });
 
-
         console.log('someone CONNECTED:');
         console.log(visitors);
-        console.log(Object.keys(visitors));
-        for (var i = 0; i < Object.keys(visitors).length; i++) {
-            for (var j = 0; j < Object.keys(visitors).length; j++) {
-                if (i != j) {
-                    var distance = calculateDistance(visitors[Object.keys(visitors)[i]].pos.lat, visitors[Object.keys(visitors)[i]].pos.lng, visitors[Object.keys(visitors)[j]].pos.lat, visitors[Object.keys(visitors)[j]].pos.lng);
-                    console.log(distance);
-                }
-            }
-        }
+
     });
     socket.on('disconnect', function() {
         if (visitors[socket.id]) {
@@ -48,18 +39,5 @@ io.on('connection', function(socket) {
         console.log(visitors);
     });
 
-    function calculateDistance(lat1, lon1, lat2, lon2) {
-        var R = 6371; // km
-        var dLat = (lat2 - lat1).toRad();
-        var dLon = (lon2 - lon1).toRad();
-        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = R * c;
-        return d;
-    }
-    Number.prototype.toRad = function() {
-        return this * Math.PI / 180;
-    }
+
 });

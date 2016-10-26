@@ -7,6 +7,8 @@ var UserSchema = new mongoose.Schema({
     age_range: { type: String },
     email: { type: String },
     gender: { type: String },
+    lat: { type: String },
+    lon: { type: String },
 }, { timestamps: true });
 
 mongoose.model('User', UserSchema);

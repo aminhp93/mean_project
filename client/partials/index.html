@@ -1,9 +1,29 @@
-<div id="users_count" ng-show="!loginStatus || loginStatus.status != 'connected'"></div>
-<div id="map" ng-show="!loginStatus || loginStatus.status != 'connected'"></div>
+<div>
+    <div class="text-right">
+        <div class="input-append text-right">
+            <input type="text" ng-model="search" />
+            <button class="btn" type="button" ng-click="geoCode()" ng-disabled="search.length == 0" title="search">
+                &nbsp;<i class="icon-search"></i>Where is this place?
+            </button>
+            <button class="btn" type="button" ng-click="gotoCurrentLocation()" title="current location">
+                &nbsp;<i class="icon-home"></i>Where am I now?
+            </button>
+        </div>
+    </div>
+    <!-- map -->
+    <app-map style="height:400px;margin:12px;box-shadow:0 3px 25px black;" center="loc" markers="users">
+    </app-map>
+    <!-- current location -->
+    <div class="text-info text-right">
+        {{loc.lat | lat:0}}, {{loc.lon | lon:0}}
+    </div>
+</div>
 <form name="myForm">
-    Your name:
-    <input type="text" ng-model="user.name" placeholder="Enter your name here" required>
+    Your friend name:
+    <input type="text" ng-model="friend_name" placeholder="Enter name here">
 </form>
+<h1>Welcome {{user}}</h1>
+<h1>{{result[0].name}} is near you, about {{result[1]}} miles.</h1>
 <h1>All users</h1>
 <div>
     <button class="btn btn-primary" ng-click="login()" ng-disabled="loginStatus.status == 'connected'">Connect with Facebook</button>
@@ -12,8 +32,9 @@
     &nbsp;
 </div>
 <br>
-<div ng-repeat="i in users">
+<div ng-repeat="i in users | filter:friend_name">
     <a href="#/users/{{i._id}}">{{i.name}}</a>
     <img style="width: 100px; height:100px" ng-src="{{i.image_url}}" alt="">
     <div>{{i.createdAt | date: YYYY-mm-dd}}</div>
+    <button ng-click="gotoLocation(i.lat, i.lon)">Location</button>
 </div>
