@@ -1,4 +1,4 @@
-app.controller('dashboardController', function($scope, dashboardFactory, $location, $cookies, ezfb, socket) {
+app.controller('dashboardController', function($scope, dashboardFactory, $location, $cookies, ezfb) {
     function getUser(data) {
         $scope.users = data;
         $scope.user = $cookies.get('name');
@@ -36,19 +36,6 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
     dashboardFactory.getUser(getUser);
 
     updateLoginStatus(updateApiMe);
-
-    function initMap() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var pos = {
-                    lat: position.coords.latitude,
-                    lon: position.coords.longitude
-                };
-            })
-        }
-    }
-
-    initMap();
 
     $scope.login = function() {
         ezfb.login(function(res) {
