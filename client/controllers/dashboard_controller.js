@@ -1,4 +1,4 @@
-app.controller('dashboardController', function($scope, dashboardFactory, $location, $cookies, ezfb) {
+app.controller('dashboardController', function($scope, dashboardFactory, $location, $cookies, ezfb, socket) {
     function getUser(data) {
         $scope.users = data;
     }
@@ -7,42 +7,50 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
 
     updateLoginStatus(updateApiMe);
 
-    function showPosition(position) {
-        console.log(position.coords.latitude, position.coords.longitude)
-    }
-
     $scope.login = function() {
-
         ezfb.login(function(res) {
             if (res.authResponse) {
                 updateLoginStatus(updateApiMe);
-            }
 
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
+                ezfb.api('/me', function(response1) {
+                    $cookies.put("user_id", response1.id);
+                    ezfb.api('/' + response1.id + '?fields=picture,age_range,email,gender', function(response2) {
+                        info = { 'facebook_id': response1.id, 'name': response1.name, 'image_url': response2.picture.data.url, 'email': response2.email, 'age_range': response2.age_range.min, 'gender': response2.gender }
+                        dashboardFactory.createUser(info, getUser);
+                    })
+                });
             }
-
-            ezfb.api('/me', function(response1) {
-                $scope.user = response1;
-                ezfb.api('/' + response1.id + '?fields=picture,age_range,email,gender', function(response2) {
-                    info = { 'name': response1.name, 'image_url': response2.picture.data.url, 'email': response2.email, 'age_range': response2.age_range.min, 'gender': response2.gender }
-                    dashboardFactory.createUser(info);
-                })
-            });
         }, { scope: 'email,user_likes' });
     };
 
     $scope.logout = function() {
-        /**
-         * Calling FB.logout
-         * https://developers.facebook.com/docs/reference/javascript/FB.logout
-         */
         ezfb.logout(function(res) {
             updateLoginStatus(updateApiMe);
         });
     };
+
+    /**
+     * For generating better looking JSON results
+     */
+    var autoToJSON = ['loginStatus', 'apiMe'];
+    angular.forEach(autoToJSON, function(varName) {
+        $scope.$watch(varName, function(val) {
+            $scope[varName + 'JSON'] = JSON.stringify(val, null, 2);
+        }, true);
+    });
+
+    function updateLoginStatus(more) {
+        ezfb.getLoginStatus(function(res) {
+            $scope.loginStatus = res;
+            (more || angular.noop)();
+        });
+    }
+
+    function updateApiMe() {
+        ezfb.api('/me', function(res) {
+            $scope.apiMe = res;
+        });
+    }
 
     $scope.share = function() {
         ezfb.ui({
@@ -60,59 +68,10 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
         );
     };
 
-    /**
-     * For generating better looking JSON results
-     */
-    var autoToJSON = ['loginStatus', 'apiMe'];
-    angular.forEach(autoToJSON, function(varName) {
-        $scope.$watch(varName, function(val) {
-            $scope[varName + 'JSON'] = JSON.stringify(val, null, 2);
-        }, true);
-    });
-
-    /**
-     * Update loginStatus result
-     */
-    function updateLoginStatus(more) {
-        ezfb.getLoginStatus(function(res) {
-            $scope.loginStatus = res;
-            (more || angular.noop)();
-        });
-    }
-
-    /**
-     * Update api('/me') result
-     */
-    function updateApiMe() {
-        ezfb.api('/me', function(res) {
-            $scope.apiMe = res;
-        });
-    }
 
     // =========================================================================
-    //                                 PAGINATION
+    //                                 SOCKET.IO
     // =========================================================================
-
-    // $scope.accounts = [];
-    // $scope.totalUsers = 0;
-    // $scope.userPerPage = 10;
-    // $scope.pagination = {
-    //     current: 1
-    // }
-
-    // $scope.pageChanged = function(newPage) {
-    //     getResultsPage(newPage);
-    // }
-
-    // function getUserFromGit(pageNumber) {
-    //     pageNumber *= $scope.userPerPage;
-    //     $http.get('https://api.github.com/users?since=' + pageNumber).then(function(result) {
-    //         $scope.accounts = result.data;
-    //         $scope.total = result.data.length;
-
-    //     })
-    // }
-    // getUserFromGit(0);
 
 
 })

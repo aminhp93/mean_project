@@ -1,4 +1,4 @@
-app.factory('dashboardFactory', function($http) {
+app.factory('dashboardFactory', function($http, $rootScope) {
     var factory = {};
     var users = [];
 
@@ -9,17 +9,18 @@ app.factory('dashboardFactory', function($http) {
         })
     }
 
-    factory.createUser = function(user) {
-        $http.post('/users', user)
+    factory.createUser = function(user, callback) {
+        $http.post('/users', user).then(function(result) {
+            users = result.data;
+            callback(users);
+        })
     }
 
     factory.getOneUser = function(id, callback) {
         $http.get('/users/' + id).then(function(result) {
             users = result.data;
             callback(users);
-            console.log(result);
         })
     }
-
     return factory;
 })

@@ -1,24 +1,114 @@
-<!DOCTYPE html>
-<html>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjRPy2x2UStWmZ9dsB7PrUoDhYSYssWYA&callback=initMap" async defer></script>
+<style>
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
 
-<body>
-    <p>Click the button to get your coordinates.</p>
-    <button onclick="getLocation()">Try It</button>
-    <p id="demo"></p>
-    <script>
-    var x = document.getElementById("demo");
+#map {
+    height: 400px;
+    width: 400px;
+}
+</style>
+<script>
+var map;
 
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {
+            lat: 37.37547033291706,
+            lng: -121.91041984504002
+        },
+        zoom: 10
+    });
+}
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, hidePosition);
+    } else {
+        alert('Geolocation not supported. Detected by IP addresss');
+        ipPosition();
+    }
+}
+
+function showPosition(position) {
+    pos = {
+        lat: parseFloat(position.coords.latitude),
+        lng: parseFloat(position.coords.longitude)
+    };
+}
+
+function hidePosition(position) {
+    alert('User denied the access of the position. Now we trying to get your location through your IP address.');
+    ipPosition();
+}
+
+function ipPosition() {
+    $.get("http://ipinfo.io", function(response) {
+        var loc = response.loc.split(',');
+        pos = {
+            lat: parseFloat(loc[0]),
+            lng: parseFloat(loc[1])
+        };
+    }, "jsonp");
+}
+getLocation();
+</script>
+<script>
+var markers = [];
+var getMarkerUniqueId = function(lat, lng) {
+    return lat + "_" + lng;
+}
+
+function addMarker(location) {
+    var markerId = getMarkerUniqueId(location.lat, location.lng);
+    var marker = new google.maps.Marker({
+        position: location,
+        map: map,
+        animation: google.maps.Animation.DROP,
+        id: markerId
+    });
+    markers[markerId] = marker;
+}
+
+var removeMarker = function(marker, markerId) {
+    market.setMap(null);
+    delete markets[markerId];
+}
+
+var socket = io();
+$(document).ready(function() {
+    check_pos = setInterval(function() {
+        if (typeof pos != 'undefined') {
+            socket.emit('new_user', {
+                pos: pos
+            });
+            clearInterval(check_pos);
         }
-    }
+    }, 500);
 
-    function showPosition(position) {
-        x.innerHTML = "Latitude: " + position.coords.latitude +
-            "<br>Longitude: " + position.coords.longitude;
-    }
-    </script>
-</body>
+    socket.on('already', function(data) {
+        $.each(data.visiters, function(key, pos) {
+            addMarker(pos);
+        })
+    })
 
-</html>
+    socket.on('connected', function(data) {
+        $('#users_count').html(data.users_count + 'connected users');
+        $('#users_count').css({
+            'visibility': 'visible'
+        });
+        addMarker(data.pos);
+    })
+
+    socket.on('disconnected', function(data) {
+        var markerId = getMarkerUniqueId(data.del.lat, data.del.lng);
+        var marker = markers[markerId];
+        removeMarker(marker, markerId);
+        $('#users_count').html(data.users_count + 'connected users');
+    })
+})
+</script>

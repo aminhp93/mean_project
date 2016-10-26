@@ -1,25 +1,15 @@
+<div id="users_count" ng-show="!loginStatus || loginStatus.status != 'connected'"></div>
+<div id="map" ng-show="!loginStatus || loginStatus.status != 'connected'"></div>
 <form name="myForm">
     Your name:
     <input type="text" ng-model="user.name" placeholder="Enter your name here" required>
 </form>
-<!-- <div>
-    <table>
-        <tr dir-paginate="i in accounts | itemsPerPage: usersPerPage" total-items="totalUsers" currrent-page="pagination.current">
-            <td>{{i.login}}</td>
-            <td>{{i.id}}</td>
-            <td><img style="width: 30px; height: 30px; " ng-src="{{i.avatar_url}}"></td>
-        </tr>
-    </table>
-    <dir-pagination-controls class="display" on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
-</div>
- -->
 <h1>All users</h1>
 <div>
     <button class="btn btn-primary" ng-click="login()" ng-disabled="loginStatus.status == 'connected'">Connect with Facebook</button>
     &nbsp;
     <button class="btn btn-danger" ng-click="logout()" ng-disabled="!loginStatus || loginStatus.status != 'connected'">Logout</button>
     &nbsp;
-    <button class="btn btn-success" ng-click="share()">FB.ui</button>
 </div>
 <br>
 <div ng-repeat="i in users">

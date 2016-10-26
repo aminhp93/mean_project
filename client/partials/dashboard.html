@@ -1,0 +1,19 @@
+<div id="users_count"></div>
+<div id="map"></div>
+<form name="myForm">
+    Your name:
+    <input type="text" ng-model="user.name" placeholder="Enter your name here" required>
+</form>
+<h1>All users</h1>
+<div>
+    <button class="btn btn-primary" ng-click="login()" ng-disabled="loginStatus.status == 'connected'">Connect with Facebook</button>
+    &nbsp;
+    <button class="btn btn-danger" ng-click="logout()" ng-disabled="!loginStatus || loginStatus.status != 'connected'">Logout</button>
+    &nbsp;
+</div>
+<br>
+<div ng-repeat="i in users">
+    <a href="#/users/{{i._id}}">{{i.name}}</a>
+    <img style="width: 100px; height:100px" ng-src="{{i.image_url}}" alt="">
+    <div>{{i.createdAt | date: YYYY-mm-dd}}</div>
+</div>

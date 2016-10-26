@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ngRoute', 'ngCookies', 'angularUtils.directives.dirPagination', 'ezfb']);
+var app = angular.module('app', ['ngRoute', 'ngCookies', 'ezfb']);
 
 app.config(function($routeProvider, ezfbProvider) {
     $routeProvider
@@ -19,5 +19,4 @@ app.config(function($routeProvider, ezfbProvider) {
 
         version: 'v2.3'
     });
-
 })

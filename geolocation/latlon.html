@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.js"></script>
+    <script src="https://raw.githubusercontent.com/arunisrael/angularjs-geolocation/master/dist/angularjs-geolocation.min.js"></script>
+    <script src="http://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry,places"></script>
+    <style>
+    .check-yes {
+        background-color: green;
+    }
+    </style>
+</head>
+
+<body ng-app="plunker">
+    <div id="map-canvas"></div>
+    <div ng-controller="searchController">
+        Search for:
+        <input type="text" ng-model="searchText">
+        <button ng-click="search()">Search</button>
+        <ul>
+            <li ng-repeat="store in stores | orderBy:'distance'">
+                {{store.name}} ({{store.distance}} metres)
+            </li>
+        </ul>
+    </div>
+    <script>
+    var app = angular.module('plunker', ['geolocation']);
+    app.controller('searchController', ['$scope', 'searchService', 'geolocation', function(scope, searchService, geolocation) {
+
+        scope.address = '';
+        scope.find = '';
+        scope.position = null;
+        scope.stores = [];
+        scope.searchText = '';
+
+        scope.refreshLocation = function() {
+            geolocation.getLocation().then(function(data) {
+                scope.coords = {
+                    lat: parseFloat(data.coords.latitude.toFixed(6)),
+                    lng: parseFloat(data.coords.longitude.toFixed(6))
+                };
+                var geocoder = new google.maps.Geocoder();
+                var latlng = new google.maps.LatLng(scope.coords.lat, scope.coords.lng);
+                scope.position = latlng;
+                scope.search();
+                geocoder.geocode({
+                    'latLng': latlng
+                }, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                            scope.address = results[0].formatted_address;
+                        } else {
+                            scope.address = 'Address not found';
+                        }
+                    } else {
+                        scope.address = 'Geocoder failed due to: ' + status;
+                    }
+                    scope.$digest();
+                });
+            });
+        };
+
+        scope.search = function() {
+            if (!scope.position) {
+                alert('Please share your location to search');
+            }
+            searchService.update(setStores, scope.position, scope.searchText);
+        };
+
+        var setStores = function(stores) {
+            scope.stores = stores;
+            calculateDistance();
+            scope.$apply();
+        }
+
+        var calculateDistance = function() {
+            for (var id in scope.stores) {
+                var store = scope.stores[id];
+                var storeLocation = new google.maps.LatLng(store.geometry.location.lat(), store.geometry.location.lng());
+                var distance = google.maps.geometry.spherical.computeDistanceBetween(scope.position, storeLocation);
+                store.distance = parseInt(distance);
+            }
+        }
+
+        scope.refreshLocation();
+    }]).factory('searchService', ['$http', function(http) {
+        return {
+            update: function(callback, position, text) {
+                var url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+
+                var params = {
+                    location: position,
+                    radius: 2500,
+                    types: ['store']
+                };
+
+                if (text) {
+                    params['name'] = text;
+                }
+                map = new google.maps.Map(document.getElementById('map-canvas'), {
+                    center: position,
+                    zoom: 15
+                });
+
+                var service = new google.maps.places.PlacesService(map);
+                service.nearbySearch(params, callback);
+            }
+        }
+    }]);
+    </script>
+</body>
+
+</html>
