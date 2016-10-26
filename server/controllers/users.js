@@ -12,22 +12,19 @@ module.exports = {
         })
     },
     create: function(request, response) {
-        User.find({ facebook_id: request.body.facebook_id }, function(err, result) {
+        User.remove({ facebook_id: request.body.facebook_id }, function(err, result) {
             if (err) {
                 console.log(err);
             } else {
-                if (result.length == 0) {
-                    User.create(request.body, function(err, result) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            response.json(result);
-                        }
-                    })
-                }
+                User.create(request.body, function(err, result) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        response.redirect("/users");
+                    }
+                })
             }
         })
-
     },
     getOne: function(request, response) {
         User.find({ _id: request.params.id }, function(err, result) {

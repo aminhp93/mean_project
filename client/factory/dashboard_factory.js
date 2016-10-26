@@ -9,8 +9,11 @@ app.factory('dashboardFactory', function($http, $rootScope) {
         })
     }
 
-    factory.createUser = function(user) {
-        $http.post('/users', user)
+    factory.createUser = function(user, callback) {
+        $http.post('/users', user).then(function(result) {
+            users = result.data;
+            callback(users);
+        })
     }
 
     factory.getOneUser = function(id, callback) {

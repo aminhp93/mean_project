@@ -19,7 +19,7 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
                     $cookies.put("user_id", response1.id);
                     ezfb.api('/' + response1.id + '?fields=picture,age_range,email,gender', function(response2) {
                         info = { 'facebook_id': response1.id, 'name': response1.name, 'image_url': response2.picture.data.url, 'email': response2.email, 'age_range': response2.age_range.min, 'gender': response2.gender }
-                        dashboardFactory.createUser(info);
+                        dashboardFactory.createUser(info, getUser);
                     })
                 });
             }
