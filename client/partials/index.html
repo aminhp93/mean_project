@@ -1,22 +1,9 @@
 <div>
-    <div class="text-right">
-        <div class="input-append text-right">
-            <input type="text" ng-model="search" />
-            <button class="btn" type="button" ng-click="geoCode()" ng-disabled="search.length == 0" title="search">
-                &nbsp;<i class="icon-search"></i>Where is this place?
-            </button>
-            <button class="btn" type="button" ng-click="gotoCurrentLocation()" title="current location">
-                &nbsp;<i class="icon-home"></i>Where am I now?
-            </button>
+    <ng-map center="current-location">
+        <div ng-repeat="i in users">
+            <marker position="{{i.lat}}, {{i.lon}}" title="{{i.name}}"></marker>
         </div>
-    </div>
-    <!-- map -->
-    <app-map style="height:400px;margin:12px;box-shadow:0 3px 25px black;" center="loc" markers="users">
-    </app-map>
-    <!-- current location -->
-    <div class="text-info text-right">
-        {{loc.lat | lat:0}}, {{loc.lon | lon:0}}
-    </div>
+    </ng-map>
 </div>
 <form name="myForm">
     Your friend name:
@@ -35,8 +22,8 @@
 </div>
 <br>
 <div ng-repeat="i in users | filter:friend_name">
-    <a href="#/users/{{i._id}}">{{i.name}}</a>
+    <div>{{i.name}}</div>
+    <a href="#/users/{{i._id}}" ng-hide="!loginStatus || loginStatus.status != 'connected'">Edit</a>
     <img style="width: 100px; height:100px" ng-src="{{i.image_url}}" alt="">
     <div>{{i.createdAt | date: YYYY-mm-dd}}</div>
-    <button ng-click="gotoLocation(i.lat, i.lon)">Location</button>
 </div>

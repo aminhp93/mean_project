@@ -1,12 +1,10 @@
 app.factory('userFactory', function($http) {
     console.log("users factory loaded");
     var factory = {};
-    var users = [];
 
-    factory.addProfile = function(info, callback) {
-        $http.post('/addP/edit/:id', info).success(function(data) {
-            callback(data);
-        });
+    factory.addProfile = function(id, info) {
+        console.log(id, info);
+        $http.post('/addP/edit/' + id, info)
     }
 
     return factory;

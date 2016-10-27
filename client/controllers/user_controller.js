@@ -1,22 +1,19 @@
-app.controller('userController', function($scope, $routeParams, dashboardFactory, userFactory) {
+app.controller('userController', function($scope, $routeParams, $location, dashboardFactory, userFactory) {
 
-    function getUser(data) {
+    function getOneUser(data) {
         $scope.users = data;
     }
 
-    function addProfile(data) {
-        $scope.addprofile = function() {
-            this.new_profile.name = $scope.name;
-            userFactory.addProfile(this.new_profile, function(data) {
-                userFactory.getOneUser(function(data) {
-                    $scope.profiles = data;
-                    this.new_profile = {};
-                    $location.path('/users');
-                })
-            })
-        }
-        userFactory.getOneUser(function(data) {
-            $scope.profiles = data;
-        })
+    dashboardFactory.getOneUser($routeParams.id, getOneUser);
+
+    $scope.addprofile = function(id) {
+        console.log($scope.new_profile);
+        userFactory.addProfile(id, $scope.new_profile);
+        $location.url("/");
     }
+
+    dashboardFactory.getOneUser($routeParams.id, function(data) {
+        $scope.profiles = data;
+    })
+
 })

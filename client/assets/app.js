@@ -1,13 +1,9 @@
-var app = angular.module('app', ['ngRoute', 'ngCookies', 'ezfb']);
+var app = angular.module('app', ['ngRoute', 'ngCookies', 'ezfb', 'ngMap']);
 
 app.config(function($routeProvider, ezfbProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'partials/index.html',
-            controller: 'dashboardController'
-        })
-        .when('/dashboard', {
-            templateUrl: 'partials/dashboard.html',
             controller: 'dashboardController'
         })
         .when('/users/:id', {
@@ -23,4 +19,5 @@ app.config(function($routeProvider, ezfbProvider) {
 
         version: 'v2.3'
     });
+
 })
