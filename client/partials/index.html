@@ -11,7 +11,7 @@
 </form>
 <div ng-hide="!loginStatus || loginStatus.status != 'connected'">
     <h1>Welcome {{user}}</h1>
-    <h1>{{result[0].name}} is near you, about {{result[1]}} miles.</h1>
+    <h1 ng-show="result[0] != null">{{result[0].name}} is near you, about {{result[1]}} miles.</h1>
     <h1>All users</h1>
 </div>
 <div>
