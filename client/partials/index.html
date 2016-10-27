@@ -1,4 +1,4 @@
-<div id="fh5co-event" class="fh5co-bg" style="background-image:url(images/img_bg_3.jpg);">
+<div id="fh5co-event" class="fh5co-bg" style="background-image:url(images/img_bg_2.jpg);">
     <nav class="fh5co-nav" role="navigation">
         <div class="container">
             <div class="row">
@@ -8,8 +8,8 @@
                 <div class="col-xs-10 text-right menu-1">
                     <ul>
                         <li class="active"><a href="#/">Home</a></li>
-                        <li ng-hide="!loginStatus || loginStatus.status != 'connected'" class="active">Welcome {{user}}</li>
-                        <li ng-click="logout()" ng-hide="!loginStatus || loginStatus.status != 'connected'">Logout</li>
+                        <li class="pink active" ng-hide="!loginStatus || loginStatus.status != 'connected'">Welcome {{user}}</li>
+                        <li class="pink" ng-click="logout()" ng-hide="!loginStatus || loginStatus.status != 'connected'">Logout</li>
                         &nbsp;
                     </ul>
                 </div>
@@ -33,18 +33,31 @@
             Your friend name:
             <input type="text" ng-model="friend_name" placeholder="Enter name here">
         </form> -->
-        <div style="margin-top: 220px">
-            <button class="btn btn-primary" ng-click="login()" ng-hide="loginStatus.status == 'connected'">Connect with Facebook</button>
-            &nbsp;
+
+
+
+
+
+
+
+
+        <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+          <div style="margin-top: 220px" >
+              <button class="btn btn-primary" ng-click="login()" ng-hide="loginStatus.status == 'connected'">Connect with Facebook</button>
+              &nbsp;
+          </div>
         </div>
+
+
+        <div class="col-md-8 col-md-offset-2 text-center" >
         <div ng-hide="!loginStatus || loginStatus.status != 'connected'" style="font-family: 'Sacramento', Arial, serif;">
-            <h3 class="pink" ng-show="result[0] != null">{{result[0].name}} is near you, about {{result[1]}} miles.</h3>
+            <h1><span class="pink" ng-show="result[0] != null">{{result[0].name}} is near you, about {{result[1]}} miles.</span></h1>
         </div>
-        <br>
-        <div ng-repeat="i in users | filter:friend_name" class="custom" ng-show="loginStatus.status == 'connected'">>
+        <div ng-repeat="i in users | filter:friend_name" class="custom" ng-show="loginStatus.status == 'connected'">
             <div>{{i.name}}</div>
             <img style="width: 100px; height:100px" ng-src="{{i.image_url}}">
             <div><a href="#/users/{{i._id}}" ng-hide="!loginStatus || loginStatus.status != 'connected'">Show</a></div>
         </div>
+      </div>
     </div>
 </div>
