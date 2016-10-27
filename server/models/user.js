@@ -8,11 +8,8 @@ var UserSchema = new mongoose.Schema({
     age_range: { type: Number },
     email: { type: String },
     gender: { type: String },
-<<<<<<< HEAD
-=======
     lat: { type: Number, default: 0 },
     lon: { type: Number, default: 0 },
->>>>>>> b5
 
     seeking: { type: String },
     country: { type: String },
@@ -21,10 +18,6 @@ var UserSchema = new mongoose.Schema({
     ethnicity: { type: String },
     occupation: { type: String },
     martial_status: { type: String },
-<<<<<<< HEAD
-    age: { type: Number },
-=======
->>>>>>> b5
     children: { type: String },
     education: { type: String },
     faith: { type: String },
