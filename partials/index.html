@@ -1,10 +1,19 @@
-<div id="users_count" ng-show="!loginStatus || loginStatus.status != 'connected'"></div>
-<div id="map" ng-show="!loginStatus || loginStatus.status != 'connected'"></div>
+<div>
+    <ng-map center="current-location">
+        <div ng-repeat="i in users">
+            <marker position="{{i.lat}}, {{i.lon}}" title="{{i.name}}"></marker>
+        </div>
+    </ng-map>
+</div>
 <form name="myForm">
-    Your name:
-    <input type="text" ng-model="user.name" placeholder="Enter your name here" required>
+    Your friend name:
+    <input type="text" ng-model="friend_name" placeholder="Enter name here">
 </form>
-<h1>All users</h1>
+<div ng-hide="!loginStatus || loginStatus.status != 'connected'">
+    <h1>Welcome {{user}}</h1>
+    <h1>{{result[0].name}} is near you, about {{result[1]}} miles.</h1>
+    <h1>All users</h1>
+</div>
 <div>
     <button class="btn btn-primary" ng-click="login()" ng-disabled="loginStatus.status == 'connected'">Connect with Facebook</button>
     &nbsp;
@@ -12,8 +21,9 @@
     &nbsp;
 </div>
 <br>
-<div ng-repeat="i in users">
-    <a href="#/users/{{i._id}}">{{i.name}}</a>
+<div ng-repeat="i in users | filter:friend_name">
+    <div>{{i.name}}</div>
+    <a href="#/users/{{i._id}}" ng-hide="!loginStatus || loginStatus.status != 'connected'">Edit</a>
     <img style="width: 100px; height:100px" ng-src="{{i.image_url}}" alt="">
     <div>{{i.createdAt | date: YYYY-mm-dd}}</div>
 </div>

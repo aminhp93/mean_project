@@ -1,27 +1,25 @@
 {
-  "name": "the_mean_wall",
-  "homepage": "https://github.com/aminhp93/full_MEAN",
-  "authors": [
-    "aminhp93 <minhpn.org.ec@gmail.com>"
-  ],
-  "description": "",
-  "main": "",
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "angular": "^1.5.8",
-    "angular-route": "^1.5.8",
-    "angular-cookies": "^1.5.8",
-    "angularUtils-pagination": "angular-utils-pagination#^0.11.1",
-    "angular-facebook": "^0.2.3",
-    "angular-easyfb": "^1.5.1",
-    "jquery": "^3.1.1",
-    "ngGeolocation": "^0.0.8"
-  }
+    "name": "the_mean_wall",
+    "homepage": "https://github.com/aminhp93/full_MEAN",
+    "authors": [
+        "aminhp93 <minhpn.org.ec@gmail.com>"
+    ],
+    "description": "",
+    "main": "",
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "angular": "^1.5.8",
+        "angular-route": "^1.5.8",
+        "angular-cookies": "^1.5.8",
+        "angular-easyfb": "^1.5.1",
+        "jquery": "^3.1.1",
+        "ngmap": "^1.17.8"
+    }
 }

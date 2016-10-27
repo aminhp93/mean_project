@@ -22,5 +22,19 @@ app.factory('dashboardFactory', function($http, $rootScope) {
             callback(users);
         })
     }
+
+    factory.updatePosition = function(info, callback) {
+        $http.post('/users/position/update', info).then(function(result) {
+            users = result.data;
+            callback(users);
+        })
+    }
+
+    factory.deletePosition = function(info, callback) {
+        $http.post('/users/position/delete', info).then(function(result) {
+            users = result.data;
+            callback(users);
+        })
+    }
     return factory;
 })
