@@ -6,6 +6,10 @@ app.config(function($routeProvider, ezfbProvider) {
             templateUrl: 'partials/index.html',
             controller: 'dashboardController'
         })
+        // .when('/front', {
+        //     templateUrl: 'partials/front.html',
+        //     controller: 'dashboardController'
+        // })
         .when('/users/:id', {
             templateUrl: 'partials/user.html',
             controller: 'userController'
