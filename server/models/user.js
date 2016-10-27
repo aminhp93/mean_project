@@ -3,9 +3,8 @@ var mongoose = require('mongoose');
 var UserSchema = new mongoose.Schema({
     facebook_id: { type: String, unique: true },
     name: { type: String },
-    user_name: { type: String },
     image_url: { type: String },
-    age_range: { type: Number },
+    age_range: { type: String },
     email: { type: String },
     gender: { type: String },
     lat: { type: Number, default: 0 },
