@@ -16,31 +16,35 @@
             </div>
         </div>
     </nav>
-    <div>
-        <ng-map center="current-location">
-            <div ng-repeat="i in users">
-                <marker position="{{i.lat}}, {{i.lon}}" title="{{i.name}}"></marker>
-            </div>
-        </ng-map>
-    </div>
-    <form name="myForm">
-        Your friend name:
-        <input type="text" ng-model="friend_name" placeholder="Enter name here">
-    </form>
-    <div>
-        <button class="btn btn-primary" ng-click="login()" ng-hide="loginStatus.status == 'connected'">Connect with Facebook</button>
-        &nbsp;
-    </div>
-    <div ng-hide="!loginStatus || loginStatus.status != 'connected'">
-        <h1 class="">Welcome {{user}}</h1>
-        <h1 ng-show="result[0] != null">{{result[0].name}} is near you, about {{result[1]}} miles.</h1>
-        <h1>All users</h1>
-    </div>
-    <br>
-    <div ng-repeat="i in users | filter:friend_name" class="user">
-        <div>{{i.name}}</div>
-        <a href="#/users/{{i._id}}" ng-hide="!loginStatus || loginStatus.status != 'connected'">Edit</a>
-        <img style="width: 100px; height:100px" ng-src="{{i.image_url}}" alt="">
-        <div>{{i.createdAt | date: YYYY-mm-dd}}</div>
+    <!-- <div class="col-md-8 col-md-offset-2 text-center fh5co-heading"> -->
+    <div class="form">
+        <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+            <span>Providing a new social experience</span>
+            <h2>By Chance</h2>
+        </div>
+        <div>
+            <ng-map center="current-location">
+                <div ng-repeat="i in users">
+                    <marker position="{{i.lat}}, {{i.lon}}" title="{{i.name}}"></marker>
+                </div>
+            </ng-map>
+        </div>
+        <!-- <form name="myForm">
+            Your friend name:
+            <input type="text" ng-model="friend_name" placeholder="Enter name here">
+        </form> -->
+        <div style="margin-top: 220px">
+            <button class="btn btn-primary" ng-click="login()" ng-hide="loginStatus.status == 'connected'">Connect with Facebook</button>
+            &nbsp;
+        </div>
+        <div ng-hide="!loginStatus || loginStatus.status != 'connected'" style="font-family: 'Sacramento', Arial, serif;">
+            <h3 class="pink" ng-show="result[0] != null">{{result[0].name}} is near you, about {{result[1]}} miles.</h3>
+        </div>
+        <br>
+        <div ng-repeat="i in users | filter:friend_name" class="custom" ng-show="loginStatus.status == 'connected'">>
+            <div>{{i.name}}</div>
+            <img style="width: 100px; height:100px" ng-src="{{i.image_url}}">
+            <div><a href="#/users/{{i._id}}" ng-hide="!loginStatus || loginStatus.status != 'connected'">Show</a></div>
+        </div>
     </div>
 </div>
