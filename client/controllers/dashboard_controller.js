@@ -13,11 +13,13 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
                 for (var i = 0; i < $scope.users.length; i++) {
                     console.log($scope.users);
                     console.log($scope.users[i]);
-
+                    console.log($cookies.get('user_id'));
+                    console.log($scope.users[i].facebook_id);
+                    $scope.result = [];
                     if ($cookies.get('user_id') != $scope.users[i].facebook_id) {
                         console.log('reusltsjfjads;')
                         var distance = calculateDistance($scope.users[i].lat, $scope.users[i].lon, pos.lat, pos.lon);
-                        $scope.result = [];
+
                         if (distance < 1) {
                             console.log('testing')
                             distance = distance.toFixed(3);
