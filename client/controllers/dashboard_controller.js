@@ -76,6 +76,20 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
         });
     };
 
+    $scope.share = function() {
+        ezfb.ui({
+                method: 'feed',
+                name: 'by Chance',
+                picture: '',
+                link: 'localhost:8000',
+                description: 'App 1'
+            },
+            function(res) {
+                // res: FB.ui response
+            }
+        );
+    }
+
     /**
      * For generating better looking JSON results
      */
