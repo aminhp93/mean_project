@@ -1,4 +1,8 @@
-<div id="fh5co-event" class="fh5co-bg" style="background-image:url(images/img_bg_2.jpg);">
+
+<!-- <div id="fh5co-event" class="fh5co-bg" style="background-image:url(images/img_bg_3.jpg);"> -->
+<!-- <header id="fh5co-header" class="fh5co-cover" role="banner" style="background-image:url(images/img_bg_2.jpg);" data-stellar-background-ratio="0.5"> -->
+  <div id="fh5co-event" class="fh5co-bg" style="background-image:url(images/img_bg_3.jpg);">
+    <div class="overlay"></div>
     <nav class="fh5co-nav" role="navigation">
         <div class="container">
             <div class="row">
@@ -16,7 +20,8 @@
             </div>
         </div>
     </nav>
-    <!-- <div class="col-md-8 col-md-offset-2 text-center fh5co-heading"> -->
+
+
     <div class="form">
         <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
             <span>Providing a new social experience</span>
@@ -29,24 +34,39 @@
                 </div>
             </ng-map>
         </div>
-        <!-- <form name="myForm">
-            Your friend name:
-            <input type="text" ng-model="friend_name" placeholder="Enter name here">
-        </form> -->
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+  <div class="row"
+    <div class="col-md-10 col-md-offset-1" >
+      <div class="col-md-6 col-sm-6 text-center">
+        <!-- <div class="event-wrap animate-box"> -->
+        <h3 ng-hide="loginStatus.status == 'connected'">Login with Facebook</h3>
+        <button class="btn btn-primary" ng-click="login()" ng-hide="loginStatus.status == 'connected'">Connect with Facebook</button>
+        &nbsp;
+        <!-- </div> -->
+      </div>
+      <div class="col-md-6 col-sm-6 text-center">
+        <!-- <div class="event-wrap animate-box"> -->
+        <h3 ng-hide="loginStatus.status == 'connected'">Share on Facebook</h3>
+        <button class="btn btn-success" ng-hide="loginStatus.status == 'connected'" ng-click="share()">FB.ui</button>
+        <!-- </div> -->
+      </div>
+    </div>
+  </div>
 
 
-
-
-
-
-
-
-        <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+    <!-- <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
           <div style="margin-top: 220px" >
               <button class="btn btn-primary" ng-click="login()" ng-hide="loginStatus.status == 'connected'">Connect with Facebook</button>
               &nbsp;
           </div>
-        </div>
+        </div> -->
 
 
         <div class="col-md-8 col-md-offset-2 text-center" >
@@ -61,3 +81,4 @@
       </div>
     </div>
 </div>
+<!-- </header>  -->
