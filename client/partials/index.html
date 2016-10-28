@@ -34,6 +34,7 @@
                 </div>
             </ng-map>
         </div>
+<<<<<<< HEAD
 
 <br>
 <br>
@@ -72,13 +73,29 @@
         <div class="col-md-8 col-md-offset-2 text-center" >
         <div ng-hide="!loginStatus || loginStatus.status != 'connected'" style="font-family: 'Sacramento', Arial, serif;">
             <h1><span class="pink" ng-show="result[0] != null">{{result[0].name}} is near you, about {{result[1]}} miles.</span></h1>
+=======
+        <!-- <form name="myForm">
+            Your friend name:
+            <input type="text" ng-model="friend_name" placeholder="Enter name here">
+        </form> -->
+        <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+            <div style="margin-top: 220px">
+                <button class="btn btn-primary" ng-click="login()" ng-hide="loginStatus.status == 'connected'">Connect with Facebook</button>
+                &nbsp;
+            </div>
+>>>>>>> 797f42905297c48b3f517e10502c77bffaa8c9ae
         </div>
-        <div ng-repeat="i in users | filter:friend_name" class="custom" ng-show="loginStatus.status == 'connected'">
-            <div>{{i.name}}</div>
-            <img style="width: 100px; height:100px" ng-src="{{i.image_url}}">
-            <div><a href="#/users/{{i._id}}" ng-hide="!loginStatus || loginStatus.status != 'connected'">Show</a></div>
+        <div class="col-md-8 col-md-offset-2 text-center">
+            <div ng-hide="!loginStatus || loginStatus.status != 'connected'" style="font-family: 'Sacramento', Arial, serif;">
+                <h1><span class="pink" ng-show="result.length != 0">{{result[0].name}} is near you, about {{result[1]}} miles.</span></h1>
+                <div id="music" ng-click="music()" ng-hide="result.length != 0">No one is nearby. Play on me</div>
+            </div>
+            <div ng-repeat="i in users | filter:friend_name" class="custom" ng-show="loginStatus.status == 'connected'">
+                <div>{{i.name}}</div>
+                <img style="width: 100px; height:100px" ng-src="{{i.image_url}}">
+                <div><a href="#/users/{{i._id}}" ng-hide="!loginStatus || loginStatus.status != 'connected'">Show</a></div>
+            </div>
         </div>
-      </div>
     </div>
 </div>
 <!-- </header>  -->

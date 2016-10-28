@@ -14,14 +14,10 @@ module.exports = {
     create: function(request, response) {
 
         User.remove({ facebook_id: request.body.facebook_id }, function(err, result) {
-            console.log(result);
-            console.log(request.body);
             if (err) {
                 console.log(err);
             } else {
-                console.log(1);
                 User.create(request.body, function(err, result) {
-                    console.log(2);
                     if (err) {
                         console.log(err);
                     } else {
@@ -41,13 +37,10 @@ module.exports = {
         })
     },
     updatePosition: function(request, response) {
-        console.log(request.body);
         User.findOne({ facebook_id: request.body.facebook_id }, function(err, result) {
             if (err) {
                 console.log(err);
             } else {
-                console.log("TEs");
-                console.log(result);
                 if (result != null) {
                     result.lat = request.body.lat;
                     result.lon = request.body.lon;
