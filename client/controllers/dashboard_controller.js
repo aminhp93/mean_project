@@ -11,11 +11,18 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
                 }
 
                 for (var i = 0; i < $scope.users.length; i++) {
+                    console.log($scope.users);
+                    console.log($scope.users[i]);
+
                     if ($cookies.get('user_id') != $scope.users[i].facebook_id) {
+                        console.log('reusltsjfjads;')
                         var distance = calculateDistance($scope.users[i].lat, $scope.users[i].lon, pos.lat, pos.lon);
+                        $scope.result = [];
                         if (distance < 1) {
+                            console.log('testing')
                             distance = distance.toFixed(3);
                             $scope.result = [$scope.users[i], distance];
+                            console.log($scope.result);
                         }
                     }
                 }
@@ -47,8 +54,8 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
                     $cookies.put('name', response1.name);
                     ezfb.api('/' + response1.id + '?fields=picture,age_range,email,gender', function(response2) {
                         console.log(1);
-                        if ("geolocation" in navigator) {
-                            console.log(1);
+                        if (navigator.geolocation) {
+                            console.log("amin");
 
                             navigator.geolocation.getCurrentPosition(function(position) {
                                 console.log(1);
@@ -69,10 +76,12 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
     };
 
     $scope.logout = function() {
+        console.log('logout1')
         ezfb.logout(function(res) {
             updateLoginStatus(updateApiMe);
             info = { 'facebook_id': $cookies.get('user_id') }
             dashboardFactory.deletePosition(info, getUser);
+            $cookies.remove('user_id');
         });
     };
 
@@ -114,7 +123,7 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
     }
 
     function init() {
-        if ("geolocation" in navigator) {
+        if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 var c = position.coords;
                 console.log(c);
@@ -126,4 +135,78 @@ app.controller('dashboardController', function($scope, dashboardFactory, $locati
     setInterval(function() {
         init();
     }, 5000);
+    $scope.music = function() {
+        var mySound, myOscillator, myGain, myDistortion, originalYPos, originalFrequency, scaleFrequencies = [110, 123.47, 130.81, 146.83, 164.81, 174.61, 196, 220, 246.94, 261.63, 293.66, 329.63, 349.23, 392, 440, 493.88, 523.25, 587.33, 659.25, 698.46, 783.99, 880, 987.77, 1046.50, 1174.66, 1318.51, 1396.91, 1567.98, 1760],
+            appNode = document.getElementById('music'),
+            appWidth = appNode.offsetWidth,
+            appHeight = appNode.offsetHeight,
+            mouseXpos = window.clientX,
+            mouseYpos = window.clientY;
+
+        appNode.style.background = 'repeating-linear-gradient(to right, #FDF6E4, #FDF6E4 50%, #F7EFD7 50%, #F7EFD7)';
+        appNode.style.backgroundSize = ((appWidth / scaleFrequencies.length) * 2) + 'px 100%';
+        var contextClass = (window.AudoContext || window.webkitAudioContext);
+
+
+        function makeDistortionCurve(amount) {
+            var k = typeof amount === 'number' ? amount : 50,
+                n_samples = 44100,
+                curve = new Float32Array(n_samples),
+                deg = Math.PI / 180,
+                i = 0,
+                x;
+            for (; i < n_samples; ++i) {
+                x = i * 2 / n_samples - 1;
+                curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+            }
+            return curve;
+        }; // look up from mozilla
+
+
+        if (contextClass) {
+            mySound = new contextClass();
+        } else {
+            document.getElementById('music').innerHTML = '<div class="container alert alert-danger" role="alert">Sorry not supported</div>';
+        }
+
+        appNode.addEventListener('mousedown', function(e) {
+            mouseXpos = e.clientX;
+            mouseYpos = e.clientY;
+            originalYPos = mouseYpos;
+
+            myOscillator = mySound.createOscillator();
+            myOscillator.type = 'sine'; // sine square sawtooth triangle
+
+            originalFrequency = scaleFrequencies[Math.floor((mouseXpos / appWidth) * scaleFrequencies.length)]; // devide into diffrent sounds
+
+            myOscillator.frequency.value = originalFrequency;
+            myOscillator.start();
+
+            myDistortion = mySound.createWaveShaper();
+            myDistortion.curve = makeDistortionCurve(400);
+            myDistortion.oversample = '4x';
+
+            myGain = mySound.createGain();
+            myGain.gain.value = 0.7; // the the volume
+
+            myOscillator.connect(myDistortion);
+            myDistortion.connect(myGain);
+            myGain.connect(mySound.destination);
+
+            appNode.addEventListener('mousemove', function(e) {
+                var distanceY = e.clientY - originalYPos;
+                mouseXpos = e.clientX;
+                appWidth = appNode.offsetWidth;
+
+                myGain.gain.value = mouseXpos / appWidth;
+                myOscillator.frequency.value = originalFrequency + distanceY;
+            }, false);
+        }, false);
+
+        appNode.addEventListener('mouseup', function(e) {
+            myOscillator.stop();
+            appNode.removeEventListener('mousemove');
+        }, false);
+
+    }
 })
